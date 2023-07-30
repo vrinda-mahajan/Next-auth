@@ -3,6 +3,7 @@ import User from "@/models/userModel";
 import Joi from "joi";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
+import { EmailType, sendEmail } from "@/helpers/mailer";
 
 connect();
 
@@ -38,6 +39,13 @@ export async function POST(request: NextRequest) {
     // saving user to db
     const savedUser = await userToBeSaved.save();
     console.log(savedUser);
+
+    await sendEmail({
+      email,
+      emailType: EmailType.Verify,
+      userId: savedUser._id,
+    });
+
     return NextResponse.json(
       { message: "User created successfully!", success: true, savedUser },
       { status: 200 }
@@ -51,7 +59,7 @@ const validate = (user: any) => {
   const schema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
     email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(255).required(),
+    password: Joi.string().min(4).max(255).required(),
   });
 
   return schema.validate(user);

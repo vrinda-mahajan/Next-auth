@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 import User from "@/models/userModel";
 
-const EmailType = {
+export const EmailType = {
   Verify: "verify",
   Reset: "reset",
 };
@@ -41,7 +41,9 @@ export async function sendEmail({ email, emailType, userId }: any) {
         emailType === EmailType.Verify
           ? "Verify your email ✔"
           : "Reset your password"
-      }</p>`,
+      }or copy and paste the link below in your browser. <br> ${
+        process.env.DOMAIN
+      }/verifyEmail?token=${hashedToken} </p>`,
     };
     const mailResponse = await transport.sendMail(mailOptions);
     return mailResponse;

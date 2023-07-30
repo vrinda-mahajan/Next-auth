@@ -63,6 +63,9 @@ export default function Login() {
           onChange={(e) => setUser({ ...user, password: e.target.value })}
         />
       </div>
+      <Link className="underline " href={"/forgetPassword"}>
+          Forget Password
+        </Link>
       <div className="flex items-center">
         <button
           onClick={onLogin}
